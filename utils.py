@@ -4,7 +4,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TASK_FILE = BASE_DIR + "/task.json"
 
-def write_data_to_json(tag, new_data):
+def write_data_to_json(tag, id, new_data):
     """
     Write a dictionary to a JSON file.
     
@@ -32,7 +32,7 @@ def write_data_to_json(tag, new_data):
         elif tag == 'update':
             # If existing_data is a dictionary, update the specified task
             if isinstance(existing_data, dict) and new_data in existing_data:
-                existing_data[new_data].update(new_data)
+                existing_data[new_data]['description'] = new_data['description']
         elif tag == 'mark-in-progress':
             if isinstance(existing_data, dict) and new_data in existing_data:
                 existing_data[new_data]['status'] = 'in-progress'
@@ -51,6 +51,16 @@ def write_data_to_json(tag, new_data):
     
     except Exception as e:
         print(f"An error occurred: {e}")
+
+
+def displayList(action, TaskDict , task):
+    for key, value in TaskDict.items():
+        if value['status'] == "done" and action == "done":
+            print(TaskDict[key])
+        elif value['status'] == "todo" and action == "todo":
+            print(TaskDict[key])
+        elif value['status'] == "in-progress" and action == "in-progress":
+            print(TaskDict[key])
 
 
 def ensure_task_file_exists():

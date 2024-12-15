@@ -1,10 +1,10 @@
 from datetime import datetime
-from utils import write_data_to_json, ensure_task_file_exists
+from utils import write_data_to_json, ensure_task_file_exists, displayList
 from dataStructure import TaskID, TaskInfo
 
 task_id = 1
 
-def task_action(action, task):
+def task_action(action, id, task):
     global task_id
     TaskID[str(task_id)] = TaskInfo().__dict__
     
@@ -14,14 +14,23 @@ def task_action(action, task):
         TaskID[str(task_id)]['status'] = 'todo'
         TaskID[str(task_id)]['createdAt'] = TaskID[str(task_id)]['updatedAt'] = datetime.now().isoformat()
 
-        write_data_to_json(action, TaskID)
+
+        write_data_to_json(action, id, TaskID)
         task_id += 1
+    elif action == 'list':
+        displayList(action, TaskID, task)
     else:
-        write_data_to_json(action, task)
+        
+        write_data_to_json(action, id, task)
+
+
+
 
 def main():
     # 確保 JSON 文件存在
     ensure_task_file_exists()
+
+    id = None
 
     while True:
         user_input = input()
@@ -38,15 +47,15 @@ def main():
 
         
         if action == 'add':
-            task_action(action, task)
+            task_action(action, id, task)
         elif action == 'delete':
-            task_action(action, task)
+            task_action(action, id, task)
         elif action == 'update':
-            update_task(action, id, task)
+            task_action(action, id, task)
         elif action == 'mark-in-progress' or action == 'mark-todo' or action == 'mark-done':
-            task_action(action, task)
+            task_action(action, id, task)
         elif action == 'list':
-            task_action(action, task)
+            task_action(action, id, task)
 
 
 
